@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dr. [Lecturer Name] — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    /* ===================== ROOT & RESET ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:    #6C3FC5;
+      --purple-lt: #9B6FE8;
+      --gold:      #F4B942;
+      --gold-lt:   #FFD580;
+      --dark:      #0C0A14;
+      --dark2:     #13101E;
+      --dark3:     #1C1830;
+      --text:      #E8E4F5;
+      --text-mute: #9E97B8;
+      --glass:     rgba(108,63,197,0.12);
+      --glass-b:   rgba(244,185,66,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ===================== CUSTOM CURSOR ===================== */
+    #cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.1s, background 0.2s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1.5px solid var(--purple-lt); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform 0.18s ease, width 0.2s, height 0.2s;
+    }
+
+    /* ===================== SCROLLBAR ===================== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark2); }
+    ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+    /* ===================== NAV ===================== */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(12,10,20,0.7);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(108,63,197,0.18);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+      color: var(--gold); letter-spacing: 0.04em; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--text-mute); text-decoration: none; font-size: 0.88rem;
+      font-weight: 500; letter-spacing: 0.04em; transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content:''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1.5px; background: var(--gold);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ===================== HERO ===================== */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding-top: 80px;
+    }
+
+    /* Particle canvas */
+    #particle-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Grid overlay */
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(108,63,197,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,63,197,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Radial glow */
+    .hero-glow {
+      position: absolute; top: 30%; left: 50%; transform: translate(-50%,-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(108,63,197,0.22) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+      animation: pulseGlow 5s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%,100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1;   transform: translate(-50%,-50%) scale(1.07); }
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 80px;
+      max-width: 1100px; padding: 0 32px; width: 100%;
+    }
+
+    /* ---- AVATAR ---- */
+    .avatar-wrap {
+      flex-shrink: 0; position: relative;
+      animation: floatAvatar 4s ease-in-out infinite;
+    }
+    @keyframes floatAvatar {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-16px); }
+    }
+
+    .avatar-ring {
+      width: 280px; height: 280px; border-radius: 50%;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-ring::before {
+      content:''; position: absolute; inset: -6px; border-radius: 50%;
+      background: conic-gradient(var(--gold), var(--purple), var(--gold));
+      animation: spinRing 6s linear infinite;
+      z-index: -1;
+    }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    .avatar-ring::after {
+      content:''; position: absolute; inset: -2px; border-radius: 50%;
+      background: var(--dark); z-index: -1;
+    }
+
+    /* SVG Avatar Character */
+    .avatar-svg { width: 240px; height: 240px; }
+
+    /* Floating badges around avatar */
+    .badge-float {
+      position: absolute; background: var(--glass);
+      border: 1px solid var(--purple-lt); border-radius: 20px;
+      padding: 6px 14px; font-size: 0.72rem; font-weight: 600;
+      color: var(--gold-lt); white-space: nowrap;
+      backdrop-filter: blur(8px);
+      animation: badgeBob 3s ease-in-out infinite;
+    }
+    .badge-float:nth-child(2) { top: 10px; right: -50px; animation-delay: 0.5s; }
+    .badge-float:nth-child(3) { bottom: 30px; right: -60px; animation-delay: 1s; }
+    .badge-float:nth-child(4) { bottom: 10px; left: -40px; animation-delay: 1.5s; }
+    @keyframes badgeBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    /* ---- HERO TEXT ---- */
+    .hero-text { flex: 1; }
+
+    .hero-eyebrow {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.18em;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 14px;
+      opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 16px;
+      opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
+    }
+    .hero-name span { color: var(--gold); }
+
+    .hero-tagline {
+      font-size: 1.05rem; color: var(--text-mute); line-height: 1.7;
+      max-width: 500px; margin-bottom: 36px;
+      opacity: 0; animation: fadeUp 0.7s 0.65s forwards;
+    }
+
+    /* Typing effect placeholder */
+    #typed-role {
+      display: inline-block; color: var(--purple-lt);
+      font-weight: 600; font-size: 1.1rem;
+      border-right: 2px solid var(--gold);
+      white-space: nowrap; overflow: hidden;
+    }
+
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.7s 0.85s forwards;
+    }
+    .btn-primary {
+      padding: 13px 30px; background: var(--purple); color: #fff;
+      border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 0.9rem; cursor: none; letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover {
+      background: var(--purple-lt); transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(108,63,197,0.4);
+    }
+    .btn-outline {
+      padding: 13px 30px; background: transparent;
+      border: 1.5px solid var(--gold); color: var(--gold);
+      border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 0.9rem; cursor: none; letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover { background: var(--glass-b); transform: translateY(-2px); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===================== SECTIONS BASE ===================== */
+    section { padding: 100px 32px; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; line-height: 1.2; margin-bottom: 20px;
+    }
+    .section-divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--gold));
+      border-radius: 2px; margin-bottom: 48px;
+    }
+
+    /* Reveal animation via IntersectionObserver */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===================== ABOUT ===================== */
+    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+
+    .about-card {
+      background: var(--dark2); border: 1px solid rgba(108,63,197,0.3);
+      border-radius: 20px; padding: 40px;
+      position: relative; overflow: hidden;
+    }
+    .about-card::before {
+      content:''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--gold));
+    }
+
+    .about-bio {
+      font-size: 1rem; line-height: 1.85; color: var(--text-mute);
+      margin-bottom: 28px;
+    }
+    .about-bio strong { color: var(--text); }
+
+    .personality-badges { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pbadge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--glass); border: 1px solid rgba(108,63,197,0.35);
+      border-radius: 30px; padding: 6px 16px;
+      font-size: 0.8rem; font-weight: 600; color: var(--purple-lt);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .pbadge:hover { background: rgba(108,63,197,0.25); transform: scale(1.04); }
+    .pbadge .icon { font-size: 1rem; }
+
+    .about-stats { display: flex; flex-direction: column; gap: 20px; }
+    .stat-item {
+      background: var(--dark3); border: 1px solid rgba(108,63,197,0.2);
+      border-radius: 14px; padding: 22px 28px;
+      display: flex; align-items: center; gap: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .stat-item:hover { border-color: var(--gold); transform: translateX(6px); }
+    .stat-icon { font-size: 2rem; }
+    .stat-value {
+      font-family: 'Syne', sans-serif; font-size: 1.8rem;
+      font-weight: 800; color: var(--gold);
+    }
+    .stat-label { font-size: 0.82rem; color: var(--text-mute); margin-top: 2px; }
+
+    /* Typing effect in about */
+    #typed-philosophy {
+      display: inline; color: var(--purple-lt); font-style: italic;
+    }
+
+    /* ===================== MODULES ===================== */
+    #modules { text-align: center; }
+    #modules .section-divider { margin: 0 auto 48px; }
+
+    .modules-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; text-align: left;
+    }
+
+    /* Flip card */
+    .flip-card { perspective: 1000px; height: 200px; }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform 0.65s cubic-bezier(.4,2,.6,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+
+    .flip-front, .flip-back {
+      position: absolute; inset: 0; border-radius: 16px;
+      backface-visibility: hidden; padding: 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .flip-front {
+      background: var(--dark2); border: 1px solid rgba(108,63,197,0.3);
+    }
+    .flip-back {
+      background: linear-gradient(135deg, var(--purple) 0%, #3a1a80 100%);
+      border: 1px solid var(--purple-lt);
+      transform: rotateY(180deg);
+    }
+
+    .module-code {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+    }
+    .module-name {
+      font-family: 'Syne', sans-serif; font-size: 1.05rem;
+      font-weight: 700; line-height: 1.3; color: var(--text);
+    }
+    .module-icon { font-size: 2.2rem; }
+    .module-desc {
+      font-size: 0.85rem; line-height: 1.65; color: rgba(255,255,255,0.85);
+    }
+    .flip-hint {
+      font-size: 0.72rem; color: var(--text-mute); text-align: right;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===================== FUN FACTS ===================== */
+    #funfacts { background: var(--dark2); border-radius: 32px;
+      padding: 80px 60px; max-width: 1100px; }
+
+    .facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+
+    .fact-card {
+      background: var(--dark3); border: 1px solid rgba(108,63,197,0.2);
+      border-radius: 16px; padding: 28px;
+      cursor: none; position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .fact-card::before {
+      content:''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(108,63,197,0.15), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .fact-card:hover { border-color: var(--purple-lt); transform: translateY(-4px); }
+    .fact-card:hover::before { opacity: 1; }
+
+    .fact-emoji { font-size: 2.5rem; margin-bottom: 14px; display: block;
+      transition: transform 0.3s; }
+    .fact-card:hover .fact-emoji { transform: scale(1.2) rotate(-5deg); }
+
+    .fact-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+      color: var(--gold); margin-bottom: 8px;
+    }
+    .fact-content {
+      font-size: 0.88rem; color: var(--text-mute); line-height: 1.7;
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s;
+      opacity: 0;
+    }
+    .fact-card.revealed .fact-content { max-height: 200px; opacity: 1; }
+    .fact-card.revealed { border-color: var(--gold); }
+
+    .fact-click-hint {
+      font-size: 0.7rem; letter-spacing: 0.12em; color: var(--purple-lt);
+      text-transform: uppercase; margin-top: 10px; display: block;
+    }
+
+    /* Superpower bar */
+    .superpower-section { margin-top: 48px; }
+    .sp-title {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700;
+      color: var(--text); margin-bottom: 24px;
+    }
+    .sp-bars { display: flex; flex-direction: column; gap: 14px; }
+    .sp-bar-wrap { }
+    .sp-label { font-size: 0.82rem; font-weight: 600; color: var(--text-mute);
+      margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .sp-label span { color: var(--gold); }
+    .sp-track {
+      height: 8px; background: rgba(108,63,197,0.2);
+      border-radius: 4px; overflow: hidden;
+    }
+    .sp-fill {
+      height: 100%; border-radius: 4px; width: 0;
+      background: linear-gradient(90deg, var(--purple), var(--gold));
+      transition: width 1.4s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ===================== QUOTE WALL ===================== */
+    #quotes { text-align: center; position: relative; }
+
+    .quote-carousel { position: relative; min-height: 220px; overflow: hidden; }
+
+    .quote-slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.9s ease;
+      padding: 0 40px;
+    }
+    .quote-slide.active { opacity: 1; }
+
+    .quote-mark {
+      font-family: 'Syne', sans-serif; font-size: 5rem; line-height: 0.6;
+      color: var(--purple); opacity: 0.4; margin-bottom: 16px;
+    }
+    .quote-text {
+      font-size: clamp(1.05rem, 2.5vw, 1.4rem); font-weight: 300;
+      color: var(--text); line-height: 1.7; max-width: 700px;
+      font-style: italic; margin-bottom: 20px;
+    }
+    .quote-source {
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--gold); text-transform: uppercase;
+    }
+
+    .quote-dots { display: flex; justify-content: center; gap: 10px; margin-top: 28px; }
+    .q-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(108,63,197,0.35); cursor: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .q-dot.active { background: var(--gold); transform: scale(1.3); }
+
+    /* ===================== CONTACT ===================== */
+    #contact {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+    }
+
+    .contact-card {
+      background: var(--dark2); border: 1px solid rgba(108,63,197,0.3);
+      border-radius: 20px; padding: 40px; position: relative; overflow: hidden;
+    }
+    .contact-card::after {
+      content:''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--purple));
+    }
+
+    .contact-info-item {
+      display: flex; gap: 16px; align-items: flex-start; margin-bottom: 22px;
+    }
+    .ci-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: var(--glass); border: 1px solid rgba(108,63,197,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .ci-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+    .ci-value { font-size: 0.95rem; color: var(--text); }
+
+    .hours-card {
+      background: var(--dark3); border: 1px solid rgba(244,185,66,0.25);
+      border-radius: 20px; padding: 36px;
+    }
+    .hours-card .section-label { margin-bottom: 24px; }
+
+    .day-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid rgba(108,63,197,0.1);
+      font-size: 0.9rem;
+    }
+    .day-row:last-child { border-bottom: none; }
+    .day-name { color: var(--text-mute); font-weight: 500; }
+    .day-time { color: var(--gold); font-weight: 600; }
+    .day-row.today .day-name { color: var(--text); font-weight: 700; }
+    .day-row.today .day-time {
+      background: rgba(244,185,66,0.15); border-radius: 6px; padding: 3px 10px;
+    }
+
+    .cta-animated {
+      display: block; text-align: center; margin-top: 32px;
+      padding: 16px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--purple), #3a1a80);
+      border: 1px solid var(--purple-lt); color: #fff;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+      text-decoration: none; letter-spacing: 0.05em;
+      position: relative; overflow: hidden; transition: transform 0.2s;
+    }
+    .cta-animated::before {
+      content:''; position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+    @keyframes shimmer { to { left: 160%; } }
+    .cta-animated:hover { transform: translateY(-3px); }
+
+    /* ===================== FOOTER ===================== */
+    footer {
+      text-align: center; padding: 48px 32px;
+      border-top: 1px solid rgba(108,63,197,0.18);
+      color: var(--text-mute); font-size: 0.82rem;
+    }
+    footer span { color: var(--gold); }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 860px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero-content { flex-direction: column; gap: 48px; align-items: center; text-align: center; }
+      .hero-cta { justify-content: center; }
+      .hero-tagline { margin: 0 auto 36px; }
+      .avatar-wrap { transform: scale(0.85); }
+      .badge-float { display: none; }
+      #about { grid-template-columns: 1fr; gap: 32px; }
+      #contact { grid-template-columns: 1fr; }
+      #funfacts { padding: 60px 28px; }
+      section { padding: 70px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero-name { font-size: 2rem; }
+      .avatar-ring { width: 200px; height: 200px; }
+      .avatar-svg { width: 170px; height: 170px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">BC·Portfolio</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#funfacts">Fun Facts</a></li>
+    <li><a href="#quotes">Quotes</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+<div id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <!-- Avatar -->
+    <div class="avatar-wrap reveal">
+      <div class="avatar-ring">
+        <!-- Animated SVG Avatar Character -->
+        <svg class="avatar-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background circle -->
+          <circle cx="100" cy="100" r="95" fill="#1C1830"/>
+
+          <!-- Body / torso -->
+          <rect x="68" y="118" width="64" height="55" rx="12" fill="#6C3FC5"/>
+          <!-- Collar / shirt detail -->
+          <polygon points="100,118 84,138 100,132 116,138" fill="#F4B942"/>
+
+          <!-- Neck -->
+          <rect x="91" y="108" width="18" height="14" rx="4" fill="#C89B7B"/>
+
+          <!-- Head -->
+          <ellipse cx="100" cy="93" rx="32" ry="34" fill="#C89B7B"/>
+
+          <!-- Hair -->
+          <ellipse cx="100" cy="63" rx="32" ry="14" fill="#2D1A5E"/>
+          <rect x="68" y="63" width="8" height="20" rx="4" fill="#2D1A5E"/>
+          <rect x="124" y="63" width="8" height="20" rx="4" fill="#2D1A5E"/>
+
+          <!-- Eyes -->
+          <ellipse cx="87" cy="92" rx="5" ry="5.5" fill="white"/>
+          <ellipse cx="113" cy="92" rx="5" ry="5.5" fill="white"/>
+          <!-- Pupils with animation -->
+          <circle cx="88" cy="93" r="3" fill="#1C1830">
+            <animateTransform attributeName="transform" type="translate"
+              values="0,0; 1,0; 0,1; -1,0; 0,0" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="114" cy="93" r="3" fill="#1C1830">
+            <animateTransform attributeName="transform" type="translate"
+              values="0,0; 1,0; 0,1; -1,0; 0,0" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <!-- Eye shine -->
+          <circle cx="90" cy="91" r="1.2" fill="white"/>
+          <circle cx="116" cy="91" r="1.2" fill="white"/>
+
+          <!-- Glasses frames -->
+          <rect x="80" y="86" width="18" height="14" rx="5" fill="none" stroke="#F4B942" stroke-width="2"/>
+          <rect x="103" y="86" width="18" height="14" rx="5" fill="none" stroke="#F4B942" stroke-width="2"/>
+          <line x1="98" y1="93" x2="103" y2="93" stroke="#F4B942" stroke-width="2"/>
+          <line x1="80" y1="93" x2="74" y2="95" stroke="#F4B942" stroke-width="2"/>
+          <line x1="121" y1="93" x2="127" y2="95" stroke="#F4B942" stroke-width="2"/>
+
+          <!-- Smile -->
+          <path d="M89 106 Q100 115 111 106" stroke="#8B5E3C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+          <!-- Arms -->
+          <rect x="44" y="120" width="26" height="14" rx="7" fill="#6C3FC5" transform="rotate(20,57,127)"/>
+          <rect x="130" y="120" width="26" height="14" rx="7" fill="#6C3FC5" transform="rotate(-20,143,127)"/>
+
+          <!-- Hands -->
+          <circle cx="42" cy="138" r="9" fill="#C89B7B"/>
+          <circle cx="158" cy="138" r="9" fill="#C89B7B"/>
+
+          <!-- Laptop / book in hands -->
+          <rect x="32" y="145" width="26" height="18" rx="3" fill="#13101E" stroke="#9B6FE8" stroke-width="1.5"/>
+          <rect x="34" y="147" width="22" height="12" rx="2" fill="#2D1A5E"/>
+          <!-- Screen glow lines -->
+          <line x1="36" y1="150" x2="54" y2="150" stroke="#F4B942" stroke-width="1" opacity="0.7"/>
+          <line x1="36" y1="153" x2="50" y2="153" stroke="#9B6FE8" stroke-width="1" opacity="0.7"/>
+          <line x1="36" y1="156" x2="52" y2="156" stroke="#F4B942" stroke-width="1" opacity="0.7"/>
+
+          <!-- Stars/sparkles around head -->
+          <g>
+            <polygon points="155,55 157,50 159,55 164,57 159,59 157,64 155,59 150,57"
+              fill="#F4B942" opacity="0.9">
+              <animateTransform attributeName="transform" type="scale"
+                values="1; 1.3; 1" dur="2.2s" repeatCount="indefinite" additive="sum"
+                transformOrigin="157 57"/>
+            </polygon>
+            <polygon points="40,75 41.5,71 43,75 47,76.5 43,78 41.5,82 40,78 36,76.5"
+              fill="#9B6FE8" opacity="0.8">
+              <animateTransform attributeName="transform" type="scale"
+                values="1; 1.2; 1" dur="3s" repeatCount="indefinite" additive="sum"
+                transformOrigin="41.5 76.5"/>
+            </polygon>
+          </g>
+        </svg>
+      </div>
+      <div class="badge-float">🎓 PhD Computer Science</div>
+      <div class="badge-float">💡 Innovation Leader</div>
+      <div class="badge-float">🚀 Belgium Campus</div>
+    </div>
+
+    <!-- Text -->
+    <div class="hero-text">
+      <p class="hero-eyebrow">Belgium Campus iTversity</p>
+      <h1 class="hero-name">
+        Dr. <span>[Lecturer<br>Full Name]</span>
+      </h1>
+      <p class="hero-tagline">
+        <span id="typed-role"></span><br><br>
+        <!-- Replace with actual tagline from social engineering session -->
+        "Empowering students to become the architects of tomorrow's digital world — one line of code at a time."
+      </p>
+      <div class="hero-cta">
+        <a href="#about" class="btn-primary">Discover More</a>
+        <a href="#contact" class="btn-outline">Office Hours</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     ABOUT
+     ========================================================= -->
+<section id="about">
+  <div class="reveal">
+    <p class="section-label">About</p>
+    <h2 class="section-title">The Mind Behind<br>the Module</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="about-card reveal">
+    <p class="about-bio">
+      <strong>Dr. [Lecturer Full Name]</strong> is a passionate academic and industry practitioner at Belgium Campus iTversity.
+      With over <strong>[X] years</strong> of experience spanning academia and the tech industry, 
+      [he/she/they] brings real-world depth to every lecture. Holding a <strong>[Qualification]</strong> 
+      from <strong>[Institution]</strong>, [his/her/their] research interests lie at the intersection of 
+      <strong>[Research Area 1]</strong> and <strong>[Research Area 2]</strong>.
+    </p>
+    <p class="about-bio">
+      Teaching philosophy: <em><span id="typed-philosophy"></span></em>
+    </p>
+    <div class="personality-badges">
+      <div class="pbadge"><span class="icon">🧠</span> Critical Thinker</div>
+      <div class="pbadge"><span class="icon">🔥</span> Passionate Educator</div>
+      <div class="pbadge"><span class="icon">🛠️</span> Problem Solver</div>
+      <div class="pbadge"><span class="icon">🌍</span> Industry Connected</div>
+      <div class="pbadge"><span class="icon">✨</span> Innovation Driven</div>
+    </div>
+  </div>
+
+  <div class="about-stats reveal">
+    <div class="stat-item">
+      <div class="stat-icon">📚</div>
+      <div>
+        <div class="stat-value">[X]+</div>
+        <div class="stat-label">Modules Taught</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">👩‍🎓</div>
+      <div>
+        <div class="stat-value">[X]+</div>
+        <div class="stat-label">Students Mentored</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🏆</div>
+      <div>
+        <div class="stat-value">[X]+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🔬</div>
+      <div>
+        <div class="stat-value">[X]+</div>
+        <div class="stat-label">Research Publications</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     MODULES
+     ========================================================= -->
+<section id="modules">
+  <div class="reveal">
+    <p class="section-label">Expertise</p>
+    <h2 class="section-title">Modules & Teaching Areas</h2>
+    <div class="section-divider"></div>
+    <p style="color:var(--text-mute);margin-bottom:48px;font-size:0.95rem;">
+      Hover over each card to explore module details
+    </p>
+  </div>
+
+  <div class="modules-grid reveal">
+    <!-- Card 1 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 1]</div>
+            <div class="module-name">[Module Name 1]</div>
+          </div>
+          <div class="module-icon">💻</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 1]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content from the social engineering session.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 2]</div>
+            <div class="module-name">[Module Name 2]</div>
+          </div>
+          <div class="module-icon">🌐</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 2]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content from the social engineering session.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 3]</div>
+            <div class="module-name">[Module Name 3]</div>
+          </div>
+          <div class="module-icon">📊</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 3]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 4]</div>
+            <div class="module-name">[Module Name 4]</div>
+          </div>
+          <div class="module-icon">🤖</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 4]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 5]</div>
+            <div class="module-name">[Module Name 5]</div>
+          </div>
+          <div class="module-icon">🔐</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 5]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+    <!-- Card 6 -->
+    <div class="flip-card">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div>
+            <div class="module-code">[MODULE CODE 6]</div>
+            <div class="module-name">[Module Name 6]</div>
+          </div>
+          <div class="module-icon">📱</div>
+          <div class="flip-hint">Hover to explore →</div>
+        </div>
+        <div class="flip-back">
+          <div class="module-code">[MODULE CODE 6]</div>
+          <div class="module-desc">
+            [Brief description of what students learn in this module — replace with real content.]
+          </div>
+          <div class="module-icon" style="font-size:1.5rem">✅ NQF Level [X]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FUN FACTS & SUPERPOWERS
+     ========================================================= -->
+<section id="funfacts" style="padding:0;margin:0 32px;">
+  <div style="padding:80px 60px 0;max-width:1036px;margin:0 auto;">
+    <div class="reveal">
+      <p class="section-label">Fun Facts & Superpowers</p>
+      <h2 class="section-title">The Person Behind<br>the Podium</h2>
+      <div class="section-divider"></div>
+      <p style="color:var(--text-mute);margin-bottom:48px;font-size:0.95rem;">Click each card to reveal the secret</p>
+    </div>
+
+    <div class="facts-grid reveal">
+      <div class="fact-card" onclick="this.classList.toggle('revealed')">
+        <span class="fact-emoji">🎯</span>
+        <div class="fact-title">The Superpower</div>
+        <div class="fact-content">[Replace with the lecturer's self-described superpower — the skill or strength they're known for among students.]</div>
+        <span class="fact-click-hint">click to reveal</span>
+      </div>
+      <div class="fact-card" onclick="this.classList.toggle('revealed')">
+        <span class="fact-emoji">🌍</span>
+        <div class="fact-title">Fun Fact #1</div>
+        <div class="fact-content">[Fun fact from the social engineering session — something the lecturer is comfortable sharing publicly.]</div>
+        <span class="fact-click-hint">click to reveal</span>
+      </div>
+      <div class="fact-card" onclick="this.classList.toggle('revealed')">
+        <span class="fact-emoji">🎮</span>
+        <div class="fact-title">Fun Fact #2</div>
+        <div class="fact-content">[Another interesting fact — hobbies, hidden talents, unexpected interests, etc.]</div>
+        <span class="fact-click-hint">click to reveal</span>
+      </div>
+      <div class="fact-card" onclick="this.classList.toggle('revealed')">
+        <span class="fact-emoji">📖</span>
+        <div class="fact-title">Career Origin Story</div>
+        <div class="fact-content">[How the lecturer got into their field — a brief origin story gathered from the session.]</div>
+        <span class="fact-click-hint">click to reveal</span>
+      </div>
+    </div>
+
+    <!-- Superpower skill bars -->
+    <div class="superpower-section reveal">
+      <p class="sp-title">⚡ Skill Power Level</p>
+      <div class="sp-bars">
+        <div class="sp-bar-wrap">
+          <div class="sp-label">[Skill / Expertise Area 1] <span>[XX]%</span></div>
+          <div class="sp-track"><div class="sp-fill" data-width="[XX]"></div></div>
+        </div>
+        <div class="sp-bar-wrap">
+          <div class="sp-label">[Skill / Expertise Area 2] <span>[XX]%</span></div>
+          <div class="sp-track"><div class="sp-fill" data-width="[XX]"></div></div>
+        </div>
+        <div class="sp-bar-wrap">
+          <div class="sp-label">[Skill / Expertise Area 3] <span>[XX]%</span></div>
+          <div class="sp-track"><div class="sp-fill" data-width="[XX]"></div></div>
+        </div>
+        <div class="sp-bar-wrap">
+          <div class="sp-label">Student Mentorship <span>99%</span></div>
+          <div class="sp-track"><div class="sp-fill" data-width="99"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     QUOTE WALL
+     ========================================================= -->
+<section id="quotes">
+  <div class="reveal">
+    <p class="section-label">Words of Wisdom</p>
+    <h2 class="section-title">Quote Wall</h2>
+    <div class="section-divider" style="margin:0 auto 48px;"></div>
+  </div>
+
+  <div class="quote-carousel reveal" id="quoteCarousel">
+    <div class="quote-slide active">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">[Replace with the lecturer's favorite career advice quote — gathered from the social engineering session.]</div>
+      <div class="quote-source">— Dr. [Lecturer Name]</div>
+    </div>
+    <div class="quote-slide">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">[A second inspiring quote or teaching philosophy statement from the lecturer.]</div>
+      <div class="quote-source">— Dr. [Lecturer Name]</div>
+    </div>
+    <div class="quote-slide">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">[A third quote — could be a favourite quote by another person that the lecturer always shares with students.]</div>
+      <div class="quote-source">— Dr. [Lecturer Name]</div>
+    </div>
+  </div>
+
+  <div class="quote-dots" id="quoteDots">
+    <div class="q-dot active" onclick="goToQuote(0)"></div>
+    <div class="q-dot" onclick="goToQuote(1)"></div>
+    <div class="q-dot" onclick="goToQuote(2)"></div>
+  </div>
+</section>
+
+<!-- =========================================================
+     CONTACT
+     ========================================================= -->
+<section id="contact">
+  <div class="reveal" style="grid-column:1/-1;">
+    <p class="section-label">Get In Touch</p>
+    <h2 class="section-title">Contact & Connect</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="contact-card reveal">
+    <h3 style="font-family:'Syne',sans-serif;font-size:1.2rem;margin-bottom:28px;color:var(--text);">
+      Professional Information
+    </h3>
+
+    <div class="contact-info-item">
+      <div class="ci-icon">🏫</div>
+      <div>
+        <div class="ci-label">Institution</div>
+        <div class="ci-value">Belgium Campus iTversity</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="ci-icon">🏢</div>
+      <div>
+        <div class="ci-label">Department</div>
+        <div class="ci-value">[Department Name]</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="ci-icon">📧</div>
+      <div>
+        <div class="ci-label">Email</div>
+        <div class="ci-value">[lecturer@belgiumcampus.ac.za]</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="ci-icon">📍</div>
+      <div>
+        <div class="ci-label">Campus</div>
+        <div class="ci-value">Pretoria, South Africa</div>
+      </div>
+    </div>
+    <div class="contact-info-item">
+      <div class="ci-icon">🔗</div>
+      <div>
+        <div class="ci-label">LinkedIn</div>
+        <div class="ci-value">[linkedin.com/in/lecturer-profile]</div>
+      </div>
+    </div>
+
+    <a href="mailto:[lecturer@belgiumcampus.ac.za]" class="cta-animated">
+      ✉️ &nbsp; Send a Message
+    </a>
+  </div>
+
+  <div class="hours-card reveal">
+    <p class="section-label">Office Hours</p>
+    <p style="color:var(--text-mute);font-size:0.85rem;margin-bottom:24px;">
+      Consultations by appointment. Walk-ins welcome during open hours.
+    </p>
+    <div class="day-row">
+      <span class="day-name">Monday</span>
+      <span class="day-time">[09:00 – 11:00]</span>
+    </div>
+    <div class="day-row today">
+      <span class="day-name">Tuesday ✦</span>
+      <span class="day-time">[13:00 – 15:00]</span>
+    </div>
+    <div class="day-row">
+      <span class="day-name">Wednesday</span>
+      <span class="day-time">[10:00 – 12:00]</span>
+    </div>
+    <div class="day-row">
+      <span class="day-name">Thursday</span>
+      <span class="day-time">By Appointment</span>
+    </div>
+    <div class="day-row">
+      <span class="day-name">Friday</span>
+      <span class="day-time">[08:00 – 10:00]</span>
+    </div>
+
+    <div style="margin-top:28px;background:rgba(108,63,197,0.1);border-radius:12px;padding:16px;">
+      <p style="font-size:0.8rem;color:var(--text-mute);line-height:1.7;">
+        📌 <strong style="color:var(--purple-lt);">Office Location:</strong> [Building / Room Number]<br>
+        🗓️ <strong style="color:var(--purple-lt);">Book a slot:</strong> Email with subject "Consultation Request"
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Built with ❤️ by <span>[Group Name]</span> · INL261 Group Project · Belgium Campus iTversity<br>
+  <span style="color:var(--text-mute);font-size:0.75rem;margin-top:6px;display:block;">
+    All content verified with and approved by the lecturer. No personal information included.
+  </span>
+</footer>
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+<script>
+// ---- Custom Cursor ----
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  }, 80);
+});
+
+// ---- Particle Canvas ----
+(function(){
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const COLOURS = ['#6C3FC5','#9B6FE8','#F4B942','#FFD580'];
+
+  function resize(){
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function Particle(){
+    this.x  = Math.random() * canvas.width;
+    this.y  = Math.random() * canvas.height;
+    this.r  = Math.random() * 2 + 0.5;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.col = COLOURS[Math.floor(Math.random()*COLOURS.length)];
+    this.alpha = Math.random() * 0.6 + 0.2;
+  }
+
+  for(let i=0;i<120;i++) particles.push(new Particle());
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.col;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+
+      // Connect nearby particles
+      particles.forEach(q=>{
+        const dx=p.x-q.x, dy=p.y-q.y, d=Math.hypot(dx,dy);
+        if(d<100){
+          ctx.beginPath();
+          ctx.strokeStyle='rgba(108,63,197,'+(0.12*(1-d/100))+')';
+          ctx.lineWidth=0.6;
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(q.x,q.y);
+          ctx.stroke();
+        }
+      });
+
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>canvas.width)  p.vx*=-1;
+      if(p.y<0||p.y>canvas.height) p.vy*=-1;
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ---- Typing Effect Hero ----
+(function(){
+  const el = document.getElementById('typed-role');
+  const phrases = [
+    'Lecturer & Innovator',
+    'Mentor & Guide',
+    'Problem Solver',
+    'Tech Educator',
+    // Add the lecturer's actual title / role below:
+    '[Actual Title from social engineering]'
+  ];
+  let pi=0, ci=0, deleting=false;
+
+  function type(){
+    const phrase = phrases[pi];
+    if(!deleting){
+      el.textContent = phrase.slice(0, ci+1);
+      ci++;
+      if(ci===phrase.length){ deleting=true; setTimeout(type,2000); return; }
+    } else {
+      el.textContent = phrase.slice(0, ci-1);
+      ci--;
+      if(ci===0){ deleting=false; pi=(pi+1)%phrases.length; }
+    }
+    setTimeout(type, deleting ? 60 : 100);
+  }
+  setTimeout(type, 1000);
+})();
+
+// ---- Typing Effect About (philosophy) ----
+(function(){
+  const el = document.getElementById('typed-philosophy');
+  // Replace with the actual teaching philosophy from the social engineering session
+  const text = '[Replace with lecturer\'s actual teaching philosophy statement gathered during the social engineering session]';
+  let i=0;
+  const obs = new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      obs.disconnect();
+      (function type(){
+        if(i<=text.length){ el.textContent=text.slice(0,i); i++; setTimeout(type,30); }
+      })();
+    }
+  }, {threshold:0.5});
+  obs.observe(el);
+})();
+
+// ---- Scroll Reveal ----
+const revealEls = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); revObs.unobserve(e.target); }
+  });
+}, {threshold:0.12});
+revealEls.forEach(el=>revObs.observe(el));
+
+// ---- Skill Bars ----
+const bars = document.querySelectorAll('.sp-fill');
+const barObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.width = e.target.dataset.width + '%';
+      barObs.unobserve(e.target);
+    }
+  });
+}, {threshold:0.3});
+bars.forEach(b=>barObs.observe(b));
+
+// ---- Quote Carousel ----
+let qCurrent = 0;
+const slides = document.querySelectorAll('.quote-slide');
+const dots   = document.querySelectorAll('.q-dot');
+
+function goToQuote(n){
+  slides[qCurrent].classList.remove('active');
+  dots[qCurrent].classList.remove('active');
+  qCurrent = n;
+  slides[qCurrent].classList.add('active');
+  dots[qCurrent].classList.add('active');
+}
+window.goToQuote = goToQuote;
+
+setInterval(()=>goToQuote((qCurrent+1)%slides.length), 5000);
+
+// ---- Highlight current day in office hours ----
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const today = days[new Date().getDay()];
+document.querySelectorAll('.day-row').forEach(row=>{
+  if(row.querySelector('.day-name')?.textContent.includes(today)){
+    row.classList.add('today');
+  } else {
+    row.classList.remove('today');
+  }
+});
+</script>
+</body>
+</html>
